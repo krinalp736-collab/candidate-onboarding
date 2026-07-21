@@ -1,0 +1,22 @@
+<% content_for :title, "Profile complete" %>
+<% content_for :step_indicator do %>
+  <%= render "onboarding/step_indicator", current: 2 %>
+<% end %>
+
+<div class="container" style="max-width: 560px;">
+  <div class="card shadow-sm text-center">
+    <div class="card-body p-5">
+      <div class="mx-auto d-flex align-items-center justify-content-center rounded-circle bg-success-subtle mb-3" style="width:3.5rem; height:3.5rem;">
+        <svg class="text-success" width="28" height="28" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+        </svg>
+      </div>
+      <h1 class="h4 fw-semibold mb-2">Thanks, <%= @profile.first_name %>!</h1>
+      <p class="text-secondary">
+        Your candidate profile has been saved and our recruitment team has been notified.
+        We'll be in touch soon.
+      </p>
+
+    </div>
+  </div>
+</div>

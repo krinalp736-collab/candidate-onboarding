@@ -1,0 +1,42 @@
+<div class="border rounded p-3 mb-3" data-nested-fields-target="fields">
+  <%= f.hidden_field :id %>
+  <%= f.hidden_field :_destroy %>
+
+  <div class="d-flex justify-content-between align-items-start mb-2">
+    <% if education.extracted? %>
+      <span class="badge text-bg-warning">
+        <%= education.needs_review? ? "Please check — extracted from CV" : "Extracted from CV" %>
+      </span>
+    <% else %>
+      <span></span>
+    <% end %>
+    <button type="button" data-action="nested-fields#remove" class="btn btn-link btn-sm text-danger p-0">Remove</button>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label">Study / course *</label>
+      <%= f.text_field :study %>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Institution</label>
+      <%= f.text_field :institution %>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">City and country</label>
+      <%= f.text_field :city_and_country %>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Level</label>
+      <%= f.select :level, Education.levels.keys.map { |k| [ k.humanize, k ] }, include_blank: true %>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Start date</label>
+      <%= f.date_field :start_date %>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">End date</label>
+      <%= f.date_field :end_date %>
+    </div>
+  </div>
+</div>

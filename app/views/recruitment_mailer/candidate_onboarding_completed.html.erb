@@ -1,0 +1,6 @@
+<p>A candidate has completed onboarding:</p>
+<ul>
+  <li><strong>Name:</strong> <%= @profile.first_name %> <%= @profile.last_name %></li>
+  <li><strong>Email:</strong> <%= @profile.email %></li>
+  <li><strong>Job function:</strong> <%= @profile.job_function&.name %></li>
+</ul>

@@ -1,0 +1,53 @@
+<% content_for :title, "Edit account" %>
+
+<div class="container d-flex justify-content-center">
+  <div class="card shadow-sm mt-5 mb-5" style="max-width: 420px; width: 100%;">
+    <div class="card-body p-4">
+      <h1 class="h4 fw-semibold mb-4">Edit <%= resource_name.to_s.humanize.downcase %></h1>
+
+      <%= render "devise/shared/error_messages", resource: resource %>
+
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }, builder: BootstrapFormBuilder) do |f| %>
+        <div class="mb-3">
+          <%= f.label :email, class: "form-label" %>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+        </div>
+
+        <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+          <p class="text-secondary small">Currently waiting confirmation for: <%= resource.unconfirmed_email %></p>
+        <% end %>
+
+        <div class="mb-3">
+          <%= f.label :password, class: "form-label" %>
+          <%= f.password_field :password, autocomplete: "new-password" %>
+          <div class="form-text">
+            Leave blank if you don't want to change it<% if @minimum_password_length %> (<%= @minimum_password_length %> characters minimum)<% end %>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :password_confirmation, class: "form-label" %>
+          <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :current_password, class: "form-label" %>
+          <%= f.password_field :current_password, autocomplete: "current-password" %>
+          <div class="form-text">We need your current password to confirm these changes.</div>
+        </div>
+
+        <div class="d-grid">
+          <%= f.submit "Update", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+
+      <hr class="my-4">
+
+      <p class="fw-medium mb-2">Cancel my account</p>
+      <p class="text-secondary small">Unhappy? You can delete your account below — this can't be undone.</p>
+      <%= button_to "Cancel my account", registration_path(resource_name),
+                     data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete,
+                     class: "btn btn-outline-danger btn-sm" %>
+    </div>
+  </div>
+</div>

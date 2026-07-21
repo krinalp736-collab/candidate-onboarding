@@ -1,0 +1,45 @@
+<% content_for :title, "Processing your CV" %>
+<% content_for :step_indicator do %>
+  <%= render "onboarding/step_indicator", current: 1 %>
+<% end %>
+
+<% if @document.pending? || @document.processing? %>
+  <%= tag.meta "http-equiv": "refresh", content: "2" %>
+<% end %>
+
+<div class="container" style="max-width: 560px;">
+  <div class="card shadow-sm text-center">
+    <div class="card-body p-5">
+      <% if @document.pending? || @document.processing? %>
+        <div class="mx-auto d-flex align-items-center justify-content-center rounded-circle bg-primary-subtle mb-3" style="width:3.5rem; height:3.5rem;">
+          <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
+        </div>
+        <h1 class="h4 fw-semibold mb-2">Analyzing your CV&hellip;</h1>
+        <p class="text-secondary mb-0">This usually takes a few seconds. This page updates automatically.</p>
+      <% elsif @document.completed? %>
+        <div class="mx-auto d-flex align-items-center justify-content-center rounded-circle bg-success-subtle mb-3" style="width:3.5rem; height:3.5rem;">
+          <svg class="text-success" width="28" height="28" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+          </svg>
+        </div>
+        <% if @document.ai? %>
+          <h1 class="h4 fw-semibold mb-2">Your CV has been analyzed</h1>
+          <p class="text-secondary">We've prefilled as much of your profile as we could find. Please review and complete it below.</p>
+        <% else %>
+          <h1 class="h4 fw-semibold mb-2">We've found a few details</h1>
+          <p class="text-secondary">We picked out your contact details from your CV. Please fill in the rest of your profile below.</p>
+        <% end %>
+        <%= link_to "Review my profile", edit_onboarding_profile_path(@profile), class: "btn btn-primary mt-2" %>
+      <% else %>
+        <div class="mx-auto d-flex align-items-center justify-content-center rounded-circle bg-warning-subtle mb-3" style="width:3.5rem; height:3.5rem;">
+          <svg class="text-warning" width="28" height="28" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+          </svg>
+        </div>
+        <h1 class="h4 fw-semibold mb-2">We couldn't fully process your CV</h1>
+        <p class="text-secondary">No problem — you can still complete your profile manually.</p>
+        <%= link_to "Continue manually", edit_onboarding_profile_path(@profile), class: "btn btn-primary mt-2" %>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,51 @@
+<% content_for :title, "Candidate profiles — Admin" %>
+
+<div class="container" style="max-width: 1080px;">
+  <div class="mb-4">
+    <h1 class="h3 fw-semibold mb-1">Candidate profiles</h1>
+    <p class="text-secondary mb-0">All candidates who have started onboarding, most recently completed first.</p>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Job function</th>
+            <th>Status</th>
+            <th>Submitted</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @candidate_profiles.each do |profile| %>
+            <tr>
+              <td><%= [ profile.first_name, profile.last_name ].compact_blank.join(" ").presence || "—" %></td>
+              <td class="text-secondary"><%= profile.email.presence || "—" %></td>
+              <td class="text-secondary"><%= profile.job_function&.name || "—" %></td>
+              <td>
+                <% if profile.onboarding_step == "completed" %>
+                  <span class="badge text-bg-success">Completed</span>
+                <% else %>
+                  <span class="badge text-bg-secondary">In progress</span>
+                <% end %>
+              </td>
+              <td class="text-secondary"><%= profile.completed_at&.strftime("%-d %b %Y") || "—" %></td>
+              <td class="text-end">
+                <%= link_to "View", admin_candidate_profile_path(id: profile.id), class: "fw-medium" %>
+              </td>
+            </tr>
+          <% end %>
+
+          <% if @candidate_profiles.empty? %>
+            <tr>
+              <td colspan="6" class="text-center text-secondary py-4">No candidates yet.</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+<div class="d-flex align-items-center gap-2 small">
+  <div class="d-flex align-items-center gap-2">
+    <span class="d-flex align-items-center justify-content-center rounded-circle fw-semibold <%= current >= 1 ? "bg-primary text-white" : "bg-secondary-subtle text-secondary" %>" style="width:1.5rem; height:1.5rem; font-size:.75rem;">1</span>
+    <span class="d-none d-sm-inline <%= current == 1 ? "fw-medium text-dark" : "text-muted" %>">Upload CV</span>
+  </div>
+  <span class="border-top" style="width:1.5rem;"></span>
+  <div class="d-flex align-items-center gap-2">
+    <span class="d-flex align-items-center justify-content-center rounded-circle fw-semibold <%= current >= 2 ? "bg-primary text-white" : "bg-secondary-subtle text-secondary" %>" style="width:1.5rem; height:1.5rem; font-size:.75rem;">2</span>
+    <span class="d-none d-sm-inline <%= current == 2 ? "fw-medium text-dark" : "text-muted" %>">Complete profile</span>
+  </div>
+</div>

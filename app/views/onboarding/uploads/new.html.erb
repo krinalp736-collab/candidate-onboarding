@@ -1,0 +1,56 @@
+<% content_for :title, "Upload your CV" %>
+<% content_for :step_indicator do %>
+  <%= render "onboarding/step_indicator", current: 1 %>
+<% end %>
+
+<div class="container" style="max-width: 560px;">
+  <div class="card shadow-sm">
+    <div class="card-body p-4 p-md-5">
+      <h1 class="h3 fw-semibold mb-2">Upload your CV</h1>
+      <p class="text-secondary mb-4">
+        We'll automatically fill in as much of your candidate profile as possible —
+        in English, Dutch, or another language. You can review and edit everything before saving.
+      </p>
+
+      <% if @profile&.errors&.any? %>
+        <div class="alert alert-danger">
+          <ul class="mb-0 ps-3">
+            <% @profile.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <%= form_with url: onboarding_uploads_path, method: :post, multipart: true do %>
+        <div data-controller="dropzone" class="mb-3">
+          <label data-dropzone-target="dropzone"
+                 data-action="dragover->dropzone#dragover dragleave->dropzone#dragleave drop->dropzone#drop"
+                 class="d-flex flex-column align-items-center gap-2 rounded border border-2 border-dashed bg-light px-4 py-5 text-center"
+                 style="cursor: pointer;">
+            <svg class="text-secondary" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 8.25 12 3.75m0 0L7.5 8.25M12 3.75v12" />
+            </svg>
+            <span class="fw-medium" data-dropzone-target="filename">
+              Drag and drop your CV, or click to browse
+            </span>
+            <span class="small text-secondary">
+              PDF, DOC, or DOCX &middot; up to <%= CandidateDocument::MAX_FILE_SIZE_BYTES / 1.megabyte %> MB
+            </span>
+            <input type="file" name="candidate_profile[file]" accept=".pdf,.doc,.docx" required
+                   class="visually-hidden" data-dropzone-target="input" data-action="change->dropzone#updateFilename">
+          </label>
+        </div>
+
+        <div class="form-check mb-4">
+          <input type="checkbox" name="candidate_profile[consent]" value="1" class="form-check-input" id="consent">
+          <label class="form-check-label small text-secondary" for="consent">
+            I agree that my CV and profile information may be processed to create and improve my candidate profile.
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Analyze CV</button>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,258 @@
+<% content_for :title, "#{[ @candidate_profile.first_name, @candidate_profile.last_name ].compact_blank.join(' ').presence || 'Candidate' } — Admin" %>
+
+<div class="container" style="max-width: 860px;">
+  <%= link_to admin_candidate_profiles_path, class: "d-inline-flex align-items-center gap-1 small fw-medium text-secondary mb-3 text-decoration-none" do %>
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+    </svg>
+    All candidates
+  <% end %>
+
+  <% cv_document = @candidate_profile.candidate_documents.order(:created_at).last %>
+
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 fw-semibold mb-0">
+      <%= [ @candidate_profile.first_name, @candidate_profile.last_name ].compact_blank.join(" ").presence || "Unnamed candidate" %>
+    </h1>
+    <div class="d-flex align-items-center gap-2">
+      <% if @candidate_profile.onboarding_step == "completed" %>
+        <span class="badge text-bg-success">Completed</span>
+      <% else %>
+        <span class="badge text-bg-secondary">In progress</span>
+      <% end %>
+      <% if cv_document&.file&.attached? %>
+        <%= link_to "Download CV", rails_blob_path(cv_document.file, disposition: "attachment"), class: "btn btn-outline-primary btn-sm" %>
+      <% end %>
+    </div>
+  </div>
+
+  <%# Personal details %>
+  <section class="card shadow-sm mb-4">
+    <div class="card-header bg-white fw-semibold">Personal details</div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="text-uppercase small text-secondary">Email</div>
+          <div><%= @candidate_profile.email.presence || "—" %></div>
+        </div>
+        <div class="col-md-6">
+          <div class="text-uppercase small text-secondary">Phone</div>
+          <div><%= @candidate_profile.phone_number.presence || "—" %></div>
+        </div>
+        <div class="col-md-6">
+          <div class="text-uppercase small text-secondary">City</div>
+          <div><%= @candidate_profile.city.presence || "—" %></div>
+        </div>
+        <div class="col-md-6">
+          <div class="text-uppercase small text-secondary">Country</div>
+          <div><%= @candidate_profile.country.presence || "—" %></div>
+        </div>
+        <div class="col-12">
+          <div class="text-uppercase small text-secondary">Languages</div>
+          <div>
+            <% if @candidate_profile.candidate_languages.any? %>
+              <%= @candidate_profile.candidate_languages.map { |cl| [ cl.language.name, cl.level ].compact_blank.join(" — ") }.join(", ") %>
+            <% else %>
+              —
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <%# Job preferences %>
+  <section class="card shadow-sm mb-4">
+    <div class="card-header bg-white fw-semibold">Job preferences</div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="text-uppercase small text-secondary">Desired job function</div>
+          <div><%= @candidate_profile.job_function&.name || "—" %></div>
+        </div>
+        <div class="col-md-6">
+          <div class="text-uppercase small text-secondary">Search status</div>
+          <div><%= @candidate_profile.search_status&.humanize || "—" %></div>
+        </div>
+        <div class="col-md-6">
+          <div class="text-uppercase small text-secondary">Preferred regions</div>
+          <div><%= @candidate_profile.preferred_regions_text.presence || "—" %></div>
+        </div>
+        <div class="col-md-6">
+          <div class="text-uppercase small text-secondary">Max travel time</div>
+          <div><%= @candidate_profile.max_travel_time ? "#{@candidate_profile.max_travel_time} minutes" : "—" %></div>
+        </div>
+        <div class="col-12">
+          <div class="text-uppercase small text-secondary">Transport</div>
+          <div><%= @candidate_profile.transport_types.map(&:humanize).join(", ").presence || "—" %></div>
+        </div>
+        <div class="col-12">
+          <div class="text-uppercase small text-secondary">Reason for looking</div>
+          <div class="text-break" style="white-space: pre-line;"><%= @candidate_profile.reason_for_looking.presence || "—" %></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <%# Employment and compensation %>
+  <section class="card shadow-sm mb-4">
+    <div class="card-header bg-white fw-semibold">Employment and compensation</div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="text-uppercase small text-secondary">Employment type</div>
+          <div><%= @candidate_profile.employment_types.map(&:humanize).join(", ").presence || "—" %></div>
+        </div>
+        <div class="col-md-6">
+          <div class="text-uppercase small text-secondary">Years of experience</div>
+          <div><%= @candidate_profile.years_of_experience || "—" %></div>
+        </div>
+        <% if @candidate_profile.show_salary_field? %>
+          <div class="col-md-6">
+            <div class="text-uppercase small text-secondary">Desired gross salary</div>
+            <div><%= @candidate_profile.desired_gross_salary || "—" %></div>
+          </div>
+        <% end %>
+        <% if @candidate_profile.show_percentage_field? %>
+          <div class="col-md-6">
+            <div class="text-uppercase small text-secondary">Desired percentage</div>
+            <div><%= @candidate_profile.desired_percentage ? "#{@candidate_profile.desired_percentage}%" : "—" %></div>
+          </div>
+        <% end %>
+        <% if @candidate_profile.show_average_daily_revenue_field? %>
+          <div class="col-md-6">
+            <div class="text-uppercase small text-secondary">Average daily revenue</div>
+            <div><%= @candidate_profile.average_daily_revenue || "—" %></div>
+          </div>
+        <% end %>
+        <% if @candidate_profile.show_big_fields? %>
+          <div class="col-md-6">
+            <div class="text-uppercase small text-secondary">BIG registration</div>
+            <div><%= @candidate_profile.big_registration_status&.humanize || "—" %></div>
+          </div>
+          <div class="col-md-6">
+            <div class="text-uppercase small text-secondary">BIG number</div>
+            <div><%= @candidate_profile.big_number.presence || "—" %></div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </section>
+
+  <%# Education %>
+  <section class="card shadow-sm mb-4">
+    <div class="card-header bg-white fw-semibold">Education</div>
+    <div class="card-body">
+      <% if @candidate_profile.educations.empty? %>
+        <p class="text-secondary mb-0">No education added.</p>
+      <% else %>
+        <% @candidate_profile.educations.each do |education| %>
+          <div class="border rounded p-3 mb-2">
+            <p class="fw-medium mb-0"><%= education.study %></p>
+            <p class="text-secondary mb-0"><%= [ education.institution, education.city_and_country ].compact_blank.join(" · ") %></p>
+            <p class="text-secondary small mb-0"><%= education.level&.humanize %> · <%= education.start_date %> – <%= education.end_date %></p>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </section>
+
+  <%# Work experience %>
+  <section class="card shadow-sm mb-4">
+    <div class="card-header bg-white fw-semibold">Work experience</div>
+    <div class="card-body">
+      <% if @candidate_profile.work_experiences.empty? %>
+        <p class="text-secondary mb-0">No work experience added.</p>
+      <% else %>
+        <% @candidate_profile.work_experiences.each do |work_experience| %>
+          <div class="border rounded p-3 mb-2">
+            <p class="fw-medium mb-0"><%= work_experience.job_title %> · <%= work_experience.company_name %></p>
+            <p class="text-secondary small mb-0">
+              <%= work_experience.start_date %> – <%= work_experience.current_job? ? "present" : work_experience.end_date %>
+            </p>
+            <p class="text-secondary mt-1 mb-0" style="white-space: pre-line;"><%= work_experience.responsibilities %></p>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </section>
+
+  <%# Skills %>
+  <section class="card shadow-sm mb-4">
+    <div class="card-header bg-white fw-semibold">Skills</div>
+    <div class="card-body d-flex flex-wrap gap-2">
+      <% @candidate_profile.candidate_skills.each do |candidate_skill| %>
+        <span class="badge text-bg-light border">
+          <%= candidate_skill.display_name %>
+          <% if candidate_skill.skill_id.nil? %>
+            <span class="text-secondary">(unmatched)</span>
+          <% end %>
+        </span>
+      <% end %>
+      <% if @candidate_profile.candidate_skills.empty? %>
+        <p class="text-secondary mb-0">No skills added.</p>
+      <% end %>
+    </div>
+  </section>
+
+  <%# Availability %>
+  <section class="card shadow-sm mb-4">
+    <div class="card-header bg-white fw-semibold">Availability</div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="text-uppercase small text-secondary">Working days</div>
+          <div><%= @candidate_profile.available_working_days.map(&:humanize).join(", ").presence || "—" %></div>
+        </div>
+        <div class="col-md-6">
+          <div class="text-uppercase small text-secondary">Available from</div>
+          <div><%= @candidate_profile.available_from || "—" %></div>
+        </div>
+        <div class="col-md-6">
+          <div class="text-uppercase small text-secondary">Notice period</div>
+          <div><%= @candidate_profile.notice_period.presence || "—" %></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <%# Additional information %>
+  <section class="card shadow-sm mb-4">
+    <div class="card-header bg-white fw-semibold">Additional information</div>
+    <div class="card-body">
+      <div class="mb-3">
+        <div class="text-uppercase small text-secondary">Professional summary</div>
+        <div style="white-space: pre-line;"><%= @candidate_profile.professional_summary.presence || "—" %></div>
+      </div>
+      <div class="mb-3">
+        <div class="text-uppercase small text-secondary">Motivation</div>
+        <div style="white-space: pre-line;"><%= @candidate_profile.motivation.presence || "—" %></div>
+      </div>
+      <div class="mb-0">
+        <div class="text-uppercase small text-secondary">Internal notes</div>
+        <div style="white-space: pre-line;"><%= @candidate_profile.internal_notes.presence || "—" %></div>
+      </div>
+    </div>
+  </section>
+
+  <%# CV documents %>
+  <section class="card shadow-sm mb-5">
+    <div class="card-header bg-white fw-semibold">CV</div>
+    <div class="card-body">
+      <% @candidate_profile.candidate_documents.each do |document| %>
+        <div>
+          <p class="mb-0"><%= document.original_filename %></p>
+          <p class="text-secondary small mb-0">
+            <%= document.parsing_status.humanize %>
+            <% if document.parsing_method.present? %>
+              · parsed via <%= document.parsing_method.upcase %>
+            <% end %>
+          </p>
+        </div>
+      <% end %>
+      <% if @candidate_profile.candidate_documents.empty? %>
+        <p class="text-secondary mb-0">No CV uploaded.</p>
+      <% end %>
+    </div>
+  </section>
+</div>

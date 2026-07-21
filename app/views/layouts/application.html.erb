@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Candidate Onboarding" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Candidate Onboarding">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%# :app auto-includes every stylesheet under app/assets/stylesheets, incl. vendor/bootstrap.min.css %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="bg-light">
+    <nav class="navbar navbar-expand navbar-light bg-white border-bottom">
+      <div class="container">
+        <span class="navbar-brand fw-semibold mb-0">
+          <span class="text-primary">Smile</span>Recruit
+        </span>
+        <div class="ms-auto d-flex align-items-center gap-3">
+          <%= yield :step_indicator %>
+
+          <div class="d-flex align-items-center gap-2 small">
+            <%# request.path also covers /admin_users/* (admin login/logout),
+                not just the /admin/* namespace — admins never see the
+                user-facing Log in/Sign up links (they can't self-register). %>
+            <% if request.path.start_with?("/admin") || admin_user_signed_in? %>
+              <% if admin_user_signed_in? %>
+                <span class="text-secondary"><%= current_admin_user.email %></span>
+                <%= button_to "Log out", destroy_admin_user_session_path, method: :delete, class: "btn btn-outline-secondary btn-sm" %>
+              <% end %>
+            <% elsif user_signed_in? %>
+              <span class="text-secondary"><%= current_user.email %></span>
+              <%= button_to "Log out", destroy_user_session_path, method: :delete, class: "btn btn-outline-secondary btn-sm" %>
+            <% else %>
+              <%= link_to "Log in", new_user_session_path, class: "text-decoration-none" %>
+              <%= link_to "Sign up", new_user_registration_path, class: "btn btn-outline-primary btn-sm" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="py-4 py-md-5">
+      <% if notice = flash[:notice] %>
+        <div class="container mb-4" style="max-width: 720px;">
+          <div class="alert alert-success mb-0" role="alert"><%= notice %></div>
+        </div>
+      <% end %>
+
+      <% if alert = flash[:alert] %>
+        <div class="container mb-4" style="max-width: 720px;">
+          <div class="alert alert-danger mb-0" role="alert"><%= alert %></div>
+        </div>
+      <% end %>
+
+      <%= yield %>
+    </main>
+  </body>
+</html>

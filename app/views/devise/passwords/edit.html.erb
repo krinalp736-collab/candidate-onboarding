@@ -1,0 +1,36 @@
+<% content_for :title, "Change your password" %>
+
+<div class="container d-flex justify-content-center">
+  <div class="card shadow-sm mt-5 mb-5" style="max-width: 420px; width: 100%;">
+    <div class="card-body p-4">
+      <h1 class="h4 fw-semibold mb-4">Change your password</h1>
+
+      <%= render "devise/shared/error_messages", resource: resource %>
+
+      <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }, builder: BootstrapFormBuilder) do |f| %>
+        <%= f.hidden_field :reset_password_token %>
+
+        <div class="mb-3">
+          <%= f.label :password, "New password", class: "form-label" %>
+          <%= f.password_field :password, autofocus: true, autocomplete: "new-password" %>
+          <% if @minimum_password_length %>
+            <div class="form-text"><%= @minimum_password_length %> characters minimum</div>
+          <% end %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :password_confirmation, "Confirm new password", class: "form-label" %>
+          <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+        </div>
+
+        <div class="d-grid">
+          <%= f.submit "Change my password", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+
+      <div class="mt-3 small">
+        <%= render "devise/shared/links" %>
+      </div>
+    </div>
+  </div>
+</div>

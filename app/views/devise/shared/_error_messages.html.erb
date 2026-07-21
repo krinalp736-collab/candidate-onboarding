@@ -1,0 +1,10 @@
+<% if resource.errors.any? %>
+  <div class="alert alert-danger" data-turbo-temporary>
+    <p class="fw-medium mb-1">Please fix the following:</p>
+    <ul class="mb-0 ps-3">
+      <% resource.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
