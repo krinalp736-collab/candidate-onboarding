@@ -71,15 +71,22 @@ Neither is required — without one, every upload falls back to the regex extrac
 
 `dotenv-rails` (development only — tests stub AI calls via WebMock and never touch the real APIs) loads `.env` automatically, so there's no need to `export` these by hand.
 
-### Admin account
+### Login credentials (first time)
 
-The seeded admin account defaults to `admin@example.com` / `password123`. Override before seeding if you want different credentials:
+| | Email | Password | Notes |
+|---|---|---|---|
+| **Admin** (recruiter) | `admin@example.com` | `password123` | Seeded by `db:seed` — see below to change it. Sign in at `/admin_users/sign_in`. |
+| **User** (candidate) | *(none seeded)* | — | No default account — admins can't self-register, but candidates can. Create one yourself at `/users/sign_up`. |
+
+To use different admin credentials, set these **before** running `db:seed`:
 
 ```bash
 export ADMIN_EMAIL=you@example.com
 export ADMIN_PASSWORD=something-else
 bin/rails db:seed
 ```
+
+(`db:seed` is idempotent — re-running it won't create a second admin or reset the password of one that already exists; change the password via the Rails console or the "Forgot your password?" flow instead.)
 
 ### Run the app
 
